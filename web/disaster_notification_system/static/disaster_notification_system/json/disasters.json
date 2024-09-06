@@ -1,0 +1,45 @@
+{
+    "type": "FeatureCollection",
+    "features":[
+        {   
+            "type": "feature",
+            "properties": {
+            "WARNINGDATE": "2023-05-12",
+            "WARNINGTYPE": "Fire",
+            "WARNINGSTATUS": "Active",
+            "WARNINGDESCRIPTION": "There is a fire in the hills near the city",
+            "WARNINGID": 1234
+        }
+        },
+        {
+            "type": "feature",
+            "properties": {
+            "WARNINGDATE": "2023-05-13",
+            "WARNINGTYPE": "Flood",
+            "WARNINGSTATUS": "Resolved",
+            "WARNINGDESCRIPTION": "Heavy rains caused flooding in the low-lying areas",
+            "WARNINGID": 5678
+            }
+        },
+        {
+            "type": "feature",
+            "properties": {
+            "WARNINGDATE": "2023-05-14",
+            "WARNINGTYPE": "Road Closure",
+            "WARNINGSTATUS": "Active",
+            "WARNINGDESCRIPTION": "A tree has fallen across the main road into town",
+            "WARNINGID": 9012
+            }
+        },
+        {
+            "type": "feature",
+            "properties": {
+            "WARNINGDATE": "2023-05-15",
+            "WARNINGTYPE": "Natural Disaster",
+            "WARNINGSTATUS": "Active",
+            "WARNINGDESCRIPTION": "A tropical cyclone is expected to hit the coast with strong winds and heavy rain",
+            "WARNINGID": 3456
+            }
+        }
+    ]
+}

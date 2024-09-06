@@ -1,0 +1,111 @@
+{% extends 'appboard/base.html' %}
+{% load static %}
+{% block extra_head %}
+  <link href="{% static '/user/css/notifications.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex justify-content-between">
+    <h1>Notification History for {{areaName}}</h1>
+  </div>
+  <div class="h-100">
+    <a href="{% url 'user:notifications' %}" style="text-decoration: none;" class="dropdown-item">
+      <i class="fas fa-fw fal fa-arrow-left"></i> Subscriptions
+  </a>
+  </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hazard Date</th>
+                <th>Hazard Type</th>
+                <th>Hazard Severity</th>
+                <th>Hazard ID</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for notification in notifications %}
+            <tr>
+                <td>
+                  {{notification.date}}
+                </td>
+                <td>
+                  {{notification.hazard_type}}
+                </td>
+                <td>
+                  {{notification.hazard_severity}}
+                </td>
+                <td>
+                  {{notification.hazard_id}}
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#details_modal_{{notification.notification_id}}">Details</button>
+                </td>
+            </tr>
+
+          {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- If details are needed -->
+{% for notification in notifications%}
+            <!-- Notification History Modal -->
+            <div class="modal fade" id="details_modal_{{notification.notification_id}}" tabindex="-1" aria-labelledby="details_modal_{{notification.notification_id}}Label" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="NaturalDisasterNotificationsModalHistoryLabel">Natural Disaster Notifications</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+
+                    <div>
+                      
+                      <strong >Hazard Date: </strong>
+                      <td>{{ notification.date }}</td>
+                    </div>
+                      <div>
+                        
+                        <strong >Area Name: </strong>
+                        <td>{{ notification.area_name }}</td>
+
+                      </div>
+                      <div>
+                        
+                        <strong >Hazard Type: </strong>
+                        <td>{{ notification.hazard_type }}</td>
+
+                      </div>
+                      <div>
+                        
+                        <strong >Hazard Severity: </strong>
+                        <td>{{ notification.hazard_severity }}</td>
+
+                      </div>
+                        <div>
+                          
+                          <strong >Hazard ID: </strong>
+                          <td>{{ notification.hazard_id }}</td>
+
+                        </div>
+                        <div>
+                          
+                          <strong >Hazard Location: </strong>
+                          <td>{{ notification.hazard_location }}</td>
+
+                        </div>
+                        <div>
+                          
+                          <strong >Hazard Description: </strong>
+                          <td>{{ notification.hazard_description }}</td>
+
+                        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+{% endfor %}
+{% block extra_body %}
+<script src="{% static 'user/js/notifications.js' %}"></script>
+{% endblock %}
+{% endblock %}

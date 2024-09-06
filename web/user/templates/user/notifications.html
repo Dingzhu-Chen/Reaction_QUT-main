@@ -1,0 +1,130 @@
+{% extends 'appboard/base.html' %}
+{% load static %}
+{% block extra_head %}
+  <link href="{% static '/user/css/notifications.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <h1>Notifications</h1>
+    <h3>Subscription Management</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Email Notification Status</th>
+                <th>Toggle Emails</th>
+                <th>Unsubscribe</th>
+                <th>Notification History</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for subscription in Subscriptions %}
+            <tr>
+                <td>{{subscription.title}}</td>
+                <td>{{subscription.emails}}</td>
+                <td>
+                  <button class="btn btn-primary" id="email-toggle-{{subscription.id}}">Toggle Email</button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" id="unsubscribe" data-bs-toggle="modal" data-bs-target="#NaturalDisasterNotificationsUnsubscribeModal{{subscription.id}}">Unsubscribe</button>
+                </td>
+                <td>
+                  <button class="btn btn-primary" onClick="window.location.href='/user/notifications/history/{{subscription.title}}';">View History</button>
+              </td>
+              <td>
+                    <button class="btn btn-primary" id="view_image" data-bs-toggle="modal" data-bs-target="#NaturalDisasterNotificationsImageModal{{subscription.id}}">View Image</button>
+              </td>
+            </tr>
+            <!-- Image Modal -->
+            <div class="modal fade" id="NaturalDisasterNotificationsImageModal{{subscription.id}}" tabindex="-1" aria-labelledby="NaturalDisasterNotificationsImageModal{{subscription.id}}Label" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="NaturalDisasterNotificationsModalImage{{subscription.id}}Label">Natural Disaster Notifications</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div id="response-container"></div>
+                  <div class="modal-body">
+                    <img src="{% static subscription.image %}" class="img-fluid">
+                    
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel{{subscription.id}}">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Unsubscribe Confirmation Modal -->
+            <div class="modal fade" id="NaturalDisasterNotificationsUnsubscribeModal{{subscription.id}}" tabindex="-1" aria-labelledby="NaturalDisasterNotificationsUnsubscribeModal{{subscription.id}}Label" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="NaturalDisasterNotificationsModalUnsubscribe{{subscription.id}}Label">Natural Disaster Notifications</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div id="response-container"></div>
+                  <div class="modal-body">
+                    Are you sure you would like to unsubscribe?<br/>
+                    This action cannot be undone.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel{{subscription.id}}">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="unsubscribe{{subscription.id}}">Unsubscribe</button>
+                  </div>
+                </div>
+              </div>
+              
+              <script>
+                $(document).ready(function() {
+                    $("#unsubscribe{{subscription.id}}").click(function(event) {
+                        event.preventDefault(); // Prevent the default form submission
+              
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'user:unsubscribe_from_area' user_id=user.id subscription_id=subscription.id %}",  // Replace with the actual URL
+                            success: function(response) {
+                              var responseContainer = $("#response-container");
+                              responseContainer.text(response.message);
+                              // Optionally, you can add CSS classes or styles to style the response
+                              responseContainer.addClass("alert alert-success");
+                              setTimeout(() => {
+                                $("#cancel{{subscription.id}}").click()
+                                window.location.reload()
+                              }, 500)
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                              var responseContainer = $("#response-container");
+                              responseContainer.text(response.message);
+                              // Optionally, you can add CSS classes or styles to style the response
+                              responseContainer.addClass("alert alert-danger");
+                            }
+                        });
+                    });
+                    $("#email-toggle-{{subscription.id}}").click(function(event){
+                      event.preventDefault(); // Prevent the default form submission
+                      $.ajax({
+                          type: "GET",
+                          url: "{% url 'user:emailToggle' user_id=user.id subscription_id=subscription.id %}",  // Replace with the actual URL
+                          success: function(response) {
+                            setTimeout(() => {
+                              window.location.reload()
+                            }, 500)
+                          },
+                          error: function(xhr, textStatus, errorThrown) {
+                            console.log(textStatus)
+                          }
+                      });
+                    })
+                });
+              </script>
+            </div>
+          {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block extra_body %}
+<script src="{% static 'user/js/notifications.js' %}"></script>
+{% endblock %}
+{% endblock %}
